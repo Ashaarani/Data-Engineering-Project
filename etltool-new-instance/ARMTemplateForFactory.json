@@ -29,13 +29,13 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/CopyPipeline_z84')]",
+			"name": "[concat(parameters('factoryName'), '/CopyPipeline_new')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy_z84",
+						"name": "Copy_iil",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -48,7 +48,7 @@
 						"userProperties": [
 							{
 								"name": "Source",
-								"value": "csv//"
+								"value": "csv//effingham_sales_by_customer_from_2023-01-01_to_2024-03-03.csv"
 							},
 							{
 								"name": "Destination",
@@ -61,7 +61,6 @@
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
-									"wildcardFileName": "*",
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
@@ -93,14 +92,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "SourceDataset_z84",
+								"referenceName": "SourceDataset_iil",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "DestinationDataset_z84",
+								"referenceName": "DestinationDataset_iil",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -113,12 +112,12 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SourceDataset_z84')]",
-				"[concat(variables('factoryId'), '/datasets/DestinationDataset_z84')]"
+				"[concat(variables('factoryId'), '/datasets/SourceDataset_iil')]",
+				"[concat(variables('factoryId'), '/datasets/DestinationDataset_iil')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DestinationDataset_z84')]",
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_iil')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -145,7 +144,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_z84')]",
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_iil')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -158,6 +157,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
+						"fileName": "df_merged_effingham.csv",
 						"fileSystem": "csv"
 					},
 					"columnDelimiter": ",",
@@ -278,6 +278,36 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Scheduled')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "CopyPipeline_new",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 1,
+						"startTime": "2024-06-22T21:27:00",
+						"timeZone": "Eastern Standard Time"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/CopyPipeline_new')]"
+			]
 		}
 	]
 }
