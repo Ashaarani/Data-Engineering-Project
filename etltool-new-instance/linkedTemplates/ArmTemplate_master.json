@@ -7,17 +7,33 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "etltool-new-instance"
 		},
+		"SourceAzureDataLakeStorage_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'SourceAzureDataLakeStorage'"
+		},
 		"Source_linked_services_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'Source_linked_services'"
+		},
+		"destAzureDataLakeStorage_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'destAzureDataLakeStorage'"
 		},
 		"dest_linked_service_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'dest_linked_service'"
 		},
+		"SourceAzureDataLakeStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://newstorageproject.dfs.core.windows.net/"
+		},
 		"Source_linked_services_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://newstorageproject.dfs.core.windows.net/"
+		},
+		"destAzureDataLakeStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://deststorageproject.dfs.core.windows.net/"
 		},
 		"dest_linked_service_properties_typeProperties_url": {
 			"type": "string",
@@ -50,14 +66,26 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"SourceAzureDataLakeStorage_accountKey": {
+						"value": "[parameters('SourceAzureDataLakeStorage_accountKey')]"
+					},
 					"Source_linked_services_accountKey": {
 						"value": "[parameters('Source_linked_services_accountKey')]"
+					},
+					"destAzureDataLakeStorage_accountKey": {
+						"value": "[parameters('destAzureDataLakeStorage_accountKey')]"
 					},
 					"dest_linked_service_accountKey": {
 						"value": "[parameters('dest_linked_service_accountKey')]"
 					},
+					"SourceAzureDataLakeStorage_properties_typeProperties_url": {
+						"value": "[parameters('SourceAzureDataLakeStorage_properties_typeProperties_url')]"
+					},
 					"Source_linked_services_properties_typeProperties_url": {
 						"value": "[parameters('Source_linked_services_properties_typeProperties_url')]"
+					},
+					"destAzureDataLakeStorage_properties_typeProperties_url": {
+						"value": "[parameters('destAzureDataLakeStorage_properties_typeProperties_url')]"
 					},
 					"dest_linked_service_properties_typeProperties_url": {
 						"value": "[parameters('dest_linked_service_properties_typeProperties_url')]"

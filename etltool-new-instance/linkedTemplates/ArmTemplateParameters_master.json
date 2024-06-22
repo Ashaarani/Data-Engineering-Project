@@ -5,14 +5,26 @@
 		"factoryName": {
 			"value": "etltool-new-instance"
 		},
+		"SourceAzureDataLakeStorage_accountKey": {
+			"value": ""
+		},
 		"Source_linked_services_accountKey": {
+			"value": ""
+		},
+		"destAzureDataLakeStorage_accountKey": {
 			"value": ""
 		},
 		"dest_linked_service_accountKey": {
 			"value": ""
 		},
+		"SourceAzureDataLakeStorage_properties_typeProperties_url": {
+			"value": "https://newstorageproject.dfs.core.windows.net/"
+		},
 		"Source_linked_services_properties_typeProperties_url": {
 			"value": "https://newstorageproject.dfs.core.windows.net/"
+		},
+		"destAzureDataLakeStorage_properties_typeProperties_url": {
+			"value": "https://deststorageproject.dfs.core.windows.net/"
 		},
 		"dest_linked_service_properties_typeProperties_url": {
 			"value": "https://deststorageproject.dfs.core.windows.net/"

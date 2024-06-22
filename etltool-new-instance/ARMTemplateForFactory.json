@@ -7,17 +7,33 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "etltool-new-instance"
 		},
+		"SourceAzureDataLakeStorage_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'SourceAzureDataLakeStorage'"
+		},
 		"Source_linked_services_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'Source_linked_services'"
+		},
+		"destAzureDataLakeStorage_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'destAzureDataLakeStorage'"
 		},
 		"dest_linked_service_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'dest_linked_service'"
 		},
+		"SourceAzureDataLakeStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://newstorageproject.dfs.core.windows.net/"
+		},
 		"Source_linked_services_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://newstorageproject.dfs.core.windows.net/"
+		},
+		"destAzureDataLakeStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://deststorageproject.dfs.core.windows.net/"
 		},
 		"dest_linked_service_properties_typeProperties_url": {
 			"type": "string",
@@ -29,13 +45,13 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/CopyPipeline_new')]",
+			"name": "[concat(parameters('factoryName'), '/pipeline_from_scratch')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy_iil",
+						"name": "Copy csv",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -45,16 +61,7 @@
 							"secureOutput": false,
 							"secureInput": false
 						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "csv//effingham_sales_by_customer_from_2023-01-01_to_2024-03-03.csv"
-							},
-							{
-								"name": "Destination",
-								"value": "destcsv//"
-							}
-						],
+						"userProperties": [],
 						"typeProperties": {
 							"source": {
 								"type": "DelimitedTextSource",
@@ -64,8 +71,7 @@
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
-									"type": "DelimitedTextReadSettings",
-									"skipLineCount": 0
+									"type": "DelimitedTextReadSettings"
 								}
 							},
 							"sink": {
@@ -80,7 +86,6 @@
 								}
 							},
 							"enableStaging": false,
-							"validateDataConsistency": false,
 							"translator": {
 								"type": "TabularTranslator",
 								"typeConversion": true,
@@ -92,14 +97,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "SourceDataset_iil",
+								"referenceName": "source",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "DestinationDataset_iil",
+								"referenceName": "destination",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -112,35 +117,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SourceDataset_iil')]",
-				"[concat(variables('factoryId'), '/datasets/DestinationDataset_iil')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DestinationDataset_iil')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "dest_linked_service",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "destcsv"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/dest_linked_service')]"
+				"[concat(variables('factoryId'), '/datasets/source')]",
+				"[concat(variables('factoryId'), '/datasets/destination')]"
 			]
 		},
 		{
@@ -246,6 +224,151 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/destination')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "destAzureDataLakeStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "destcsv"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/destAzureDataLakeStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/source')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SourceAzureDataLakeStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "effingham_sales_by_customer_from_2023-01-01_to_2024-03-03.csv",
+						"fileSystem": "csv"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Last Name",
+						"type": "String"
+					},
+					{
+						"name": "First Name",
+						"type": "String"
+					},
+					{
+						"name": "Email",
+						"type": "String"
+					},
+					{
+						"name": "Sales Count",
+						"type": "String"
+					},
+					{
+						"name": "Returns Count",
+						"type": "String"
+					},
+					{
+						"name": "Quantity Sold",
+						"type": "String"
+					},
+					{
+						"name": "Sales Amount",
+						"type": "String"
+					},
+					{
+						"name": "Returns Amount",
+						"type": "String"
+					},
+					{
+						"name": "Quantity Returned",
+						"type": "String"
+					},
+					{
+						"name": "Costs",
+						"type": "String"
+					},
+					{
+						"name": "Discounts",
+						"type": "String"
+					},
+					{
+						"name": "Net Sales",
+						"type": "String"
+					},
+					{
+						"name": "Gross Margin",
+						"type": "String"
+					},
+					{
+						"name": "Gross Profit",
+						"type": "String"
+					},
+					{
+						"name": "Average Items Per Sale",
+						"type": "String"
+					},
+					{
+						"name": "Average Sale Amount",
+						"type": "String"
+					},
+					{
+						"name": "Last Transacted Date",
+						"type": "String"
+					},
+					{
+						"name": "Customer ID",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SourceAzureDataLakeStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceAzureDataLakeStorage')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('SourceAzureDataLakeStorage_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('SourceAzureDataLakeStorage_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Source_linked_services')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -257,6 +380,23 @@
 					"accountKey": {
 						"type": "SecureString",
 						"value": "[parameters('Source_linked_services_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/destAzureDataLakeStorage')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('destAzureDataLakeStorage_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('destAzureDataLakeStorage_accountKey')]"
 					}
 				}
 			},
@@ -278,56 +418,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Scheduled')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Minute",
-						"interval": 1,
-						"startTime": "2024-06-22T17:32:00",
-						"timeZone": "Mountain Standard Time"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/trigger1')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "CopyPipeline_new",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Minute",
-						"interval": 1,
-						"startTime": "2024-06-23T17:39:00",
-						"timeZone": "Eastern Standard Time"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/CopyPipeline_new')]"
-			]
 		}
 	]
 }
