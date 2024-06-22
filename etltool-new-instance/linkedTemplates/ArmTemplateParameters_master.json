@@ -29,6 +29,9 @@
 		"dest_linked_service_properties_typeProperties_url": {
 			"value": "https://deststorageproject.dfs.core.windows.net/"
 		},
+		"newtrig_properties_pipeline1_copy1_parameters_file_name": {
+			"value": "@triggerBody().fileName"
+		},
 		"newtrig_properties_typeProperties_scope": {
 			"value": "/subscriptions/93d189b4-0cd2-415b-822d-c0a9607e9150/resourceGroups/Data_Engineering_project/providers/Microsoft.Storage/storageAccounts/newstorageproject"
 		},

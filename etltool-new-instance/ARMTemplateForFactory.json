@@ -39,6 +39,10 @@
 			"type": "string",
 			"defaultValue": "https://deststorageproject.dfs.core.windows.net/"
 		},
+		"newtrig_properties_pipeline1_copy1_parameters_file_name": {
+			"type": "string",
+			"defaultValue": "@triggerBody().fileName"
+		},
 		"newtrig_properties_typeProperties_scope": {
 			"type": "string",
 			"defaultValue": "/subscriptions/93d189b4-0cd2-415b-822d-c0a9607e9150/resourceGroups/Data_Engineering_project/providers/Microsoft.Storage/storageAccounts/newstorageproject"
@@ -180,7 +184,12 @@
 							{
 								"referenceName": "source",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"file_name_ds": {
+										"value": "@pipeline().parameters.file_name",
+										"type": "Expression"
+									}
+								}
 							}
 						],
 						"outputs": [
@@ -194,6 +203,11 @@
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"file_name": {
+						"type": "string"
+					}
 				},
 				"annotations": []
 			},
@@ -238,12 +252,21 @@
 					"referenceName": "SourceAzureDataLakeStorage",
 					"type": "LinkedServiceReference"
 				},
+				"parameters": {
+					"file_name_ds": {
+						"type": "string",
+						"defaultValue": "dataset().file_name_ds"
+					}
+				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": "effingham_customers.csv",
+						"fileName": {
+							"value": "@dataset().file_name_ds",
+							"type": "Expression"
+						},
 						"fileSystem": "csv"
 					},
 					"columnDelimiter": ",",
@@ -404,14 +427,16 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipelines": [
 					{
 						"pipelineReference": {
 							"referenceName": "pipeline1_copy1",
 							"type": "PipelineReference"
 						},
-						"parameters": {}
+						"parameters": {
+							"file_name": "[parameters('newtrig_properties_pipeline1_copy1_parameters_file_name')]"
+						}
 					}
 				],
 				"type": "BlobEventsTrigger",
