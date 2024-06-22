@@ -1,0 +1,97 @@
+{
+	"name": "SourceDataset_iil",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Source_linked_services",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "effingham_sales_by_customer_from_2023-01-01_to_2024-03-03.csv",
+				"fileSystem": "csv"
+			},
+			"columnDelimiter": ",",
+			"rowDelimiter": "\n",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Last Name",
+				"type": "String"
+			},
+			{
+				"name": "First Name",
+				"type": "String"
+			},
+			{
+				"name": "Email",
+				"type": "String"
+			},
+			{
+				"name": "Sales Count",
+				"type": "String"
+			},
+			{
+				"name": "Returns Count",
+				"type": "String"
+			},
+			{
+				"name": "Quantity Sold",
+				"type": "String"
+			},
+			{
+				"name": "Sales Amount",
+				"type": "String"
+			},
+			{
+				"name": "Returns Amount",
+				"type": "String"
+			},
+			{
+				"name": "Quantity Returned",
+				"type": "String"
+			},
+			{
+				"name": "Costs",
+				"type": "String"
+			},
+			{
+				"name": "Discounts",
+				"type": "String"
+			},
+			{
+				"name": "Net Sales",
+				"type": "String"
+			},
+			{
+				"name": "Gross Margin",
+				"type": "String"
+			},
+			{
+				"name": "Gross Profit",
+				"type": "String"
+			},
+			{
+				"name": "Average Items Per Sale",
+				"type": "String"
+			},
+			{
+				"name": "Average Sale Amount",
+				"type": "String"
+			},
+			{
+				"name": "Last Transacted Date",
+				"type": "String"
+			},
+			{
+				"name": "Customer ID",
+				"type": "String"
+			}
+		]
+	}
+}
