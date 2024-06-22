@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "effingham_sales_by_customer_from_2023-01-01_to_2024-03-03.csv",
+				"fileName": "df_merged_effingham.csv",
 				"fileSystem": "csv"
 			},
 			"columnDelimiter": ",",
