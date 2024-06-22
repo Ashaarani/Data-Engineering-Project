@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "df_merged_effingham.csv",
+				"fileName": "effingham_customers.csv",
 				"fileSystem": "csv"
 			},
 			"columnDelimiter": ",",
